@@ -1,0 +1,22 @@
+@"
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+build/
+dist/
+tsconfig.tsbuildinfo
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+"@ | Add-Content .gitignore
