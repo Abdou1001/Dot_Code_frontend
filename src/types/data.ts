@@ -84,6 +84,7 @@ export interface Project {
 export interface Category {
     id: string;
     name: string;
+    name_ar?: string | null;
     slug: string;
     sort_order: number;
     is_active: boolean;

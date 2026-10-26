@@ -76,7 +76,7 @@ const NavMain = () => {
 
     return (
         <SidebarGroup className="overflow-hidden">
-            <SidebarMenu className="space-y-1.5 px-2">
+            <SidebarMenu className="space-y-1.5 p-0">
                 {items.map((item) => {
                     const isActive =
                         item.href === "/dashboard"
@@ -89,9 +89,9 @@ const NavMain = () => {
                                 asChild
                                 tooltip={item.label}
                                 isActive={isActive}
-                                className={`px-3 py-3 rounded-xl transition-all duration-200 h-10 overflow-hidden scrollbar-none ${
+                                className={`rounded-xl transition-all duration-200 h-10 ${
                                     isActive
-                                        ? "bg-gradient-to-r from-blue-600/30 to-purple-600/20 text-white font-medium border border-blue-500/30 shadow-[0_0_15px_rgba(0,117,255,0.2)]"
+                                        ? "bg-gradient-to-r from-blue-600/30 to-blue-200/20 text-white font-medium border border-blue-500/30 shadow-[0_0_15px_rgba(0,117,255,0.2)]"
                                         : "text-slate-400 hover:text-white hover:bg-white/5"
                                 }`}>
                                 <Link
@@ -99,12 +99,12 @@ const NavMain = () => {
                                     onClick={() => setOpenMobile(false)}
                                     className="flex items-center gap-3">
                                     <div
-                                        className={`flex items-center justify-center size-8 rounded-lg transition-colors  ${
+                                        className={`flex items-center justify-center size-8 rounded-lg transition-colors ${
                                             isActive
                                                 ? "bg-blue-600 text-white shadow-[0_0_10px_rgba(0,117,255,0.5)]"
                                                 : "bg-[#0b1437] text-slate-400 group-hover:text-white"
                                         }`}>
-                                        <item.icon className="size-4 shrink-0" />
+                                        <item.icon className="size-5 shrink-0" />
                                     </div>
                                     <span className="text-sm">{item.label}</span>
                                 </Link>

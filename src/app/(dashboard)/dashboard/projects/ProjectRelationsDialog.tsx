@@ -214,7 +214,7 @@ export function ProjectRelationsDialog({open, onOpenChange, project}: ProjectRel
                                     <Badge
                                         key={c.id}
                                         className="bg-purple-600/20 text-purple-300 border-purple-500/30 pl-1.5 flex items-center gap-1.5 text-xs py-1">
-                                        <span>{c.name}</span>
+                                        <span>{c.name_ar || c.name}</span>
                                         <button
                                             type="button"
                                             disabled={removeCatMutation.isPending}
@@ -240,7 +240,7 @@ export function ProjectRelationsDialog({open, onOpenChange, project}: ProjectRel
                                             disabled={assignCatMutation.isPending}
                                             className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-purple-600/20 text-slate-300 hover:text-purple-300 border border-white/5 hover:border-purple-500/30 text-xs transition-colors flex items-center gap-1">
                                             <Plus className="size-3" />
-                                            <span>{c.name}</span>
+                                            <span>{c.name_ar || c.name}</span>
                                         </button>
                                     ))}
                                 </div>

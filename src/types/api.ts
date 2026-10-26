@@ -54,6 +54,7 @@ export interface BaseEntityPayload {
 
 export interface NamedEntityPayload extends BaseEntityPayload {
     name: string;
+    name_ar?: string | null;
 }
 
 export interface IconEntityPayload extends BaseEntityPayload {

@@ -4,6 +4,7 @@ import {useState} from "react";
 import {ColumnDef} from "@tanstack/react-table";
 import {Category} from "@/types/data";
 import {useCategories, useDeleteCategory} from "@/hooks/categories/useCategories";
+import {CategoriesSkeleton} from "../components/skeletons";
 import {DataTable} from "@/app/(dashboard)/dashboard/components/table/DataTable";
 import DataTableToolbar from "@/app/(dashboard)/dashboard/components/table/DataTableToolbar";
 import DataTableStatus from "@/app/(dashboard)/dashboard/components/table/DataTableStatus";
@@ -42,18 +43,37 @@ export default function CategoriesPage() {
 
     const deleteMutation = useDeleteCategory();
 
+    if (isLoading && !data) {
+        return <CategoriesSkeleton />;
+    }
+
     const categories = data?.results || [];
     const pagination = data?.pagination;
 
     const columns: ColumnDef<Category>[] = [
         {
             accessorKey: "name",
-            header: "اسم التصنيف",
+            header: "اسم التصنيف (EN)",
             cell: ({row}) => (
                 <div className="py-1">
-                    <span className="font-semibold text-white text-sm">
+                    <span className="font-semibold text-white text-sm" dir="ltr">
                         {row.original.name}
                     </span>
+                </div>
+            ),
+        },
+        {
+            accessorKey: "name_ar",
+            header: "الاسم بالعربية",
+            cell: ({row}) => (
+                <div className="py-1">
+                    {row.original.name_ar ? (
+                        <span className="font-medium text-slate-200 text-sm">
+                            {row.original.name_ar}
+                        </span>
+                    ) : (
+                        <span className="text-xs text-slate-500 italic">—</span>
+                    )}
                 </div>
             ),
         },

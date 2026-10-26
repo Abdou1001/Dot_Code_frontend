@@ -4,7 +4,7 @@ import {useCurrentUser} from "@/hooks/auth/useCurrentUser";
 import {useLogout} from "@/hooks/auth/useLogout";
 import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
-import {Skeleton} from "@/components/ui/skeleton";
+import {AccountSkeleton} from "../components/skeletons";
 import {
     Calendar,
     CheckCircle2,
@@ -20,6 +20,10 @@ import {Avatar, AvatarFallback} from "@/components/ui/avatar";
 export default function AccountPage() {
     const {data: user, isLoading, isError, refetch} = useCurrentUser();
     const logout = useLogout();
+
+    if (isLoading && !user) {
+        return <AccountSkeleton />;
+    }
 
     const initials = user?.full_name ? user.full_name.substring(0, 2).toUpperCase() : "DC";
 
@@ -61,13 +65,9 @@ export default function AccountPage() {
                             </AvatarFallback>
                         </Avatar>
                         <div>
-                            {isLoading ? (
-                                <Skeleton className="h-6 w-36 bg-white/10" />
-                            ) : (
-                                <h3 className="text-lg font-bold text-white">
-                                    {user?.full_name || "المدير"}
-                                </h3>
-                            )}
+                            <h3 className="text-lg font-bold text-white">
+                                {user?.full_name || "المدير"}
+                            </h3>
                             <div className="flex items-center gap-2 mt-1">
                                 <Badge className="bg-blue-600/20 text-blue-300 border-blue-500/30 text-[11px] flex items-center gap-1">
                                     <Shield className="size-3" />
@@ -95,13 +95,13 @@ export default function AccountPage() {
                 </div>
 
                 {/* Account Properties Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-white/10 text-xs">
+                <div className="grid grid-cols-1 gap-4 mt-6 pt-6 border-t border-white/10 text-xs">
                     <div className="space-y-1">
                         <span className="text-slate-400 flex items-center gap-1.5">
                             <Mail className="size-3.5 text-blue-400" />
                             <span>البريد الإلكتروني المعتمد:</span>
                         </span>
-                        <p className="text-white font-mono text-sm" dir="ltr">
+                        <p className="text-white font-mono text-sm">
                             {isLoading ? "..." : user?.email}
                         </p>
                     </div>
@@ -116,25 +116,7 @@ export default function AccountPage() {
                         </p>
                     </div>
 
-                    <div className="space-y-1">
-                        <span className="text-slate-400 flex items-center gap-1.5">
-                            <UserIcon className="size-3.5 text-cyan-400" />
-                            <span>معرّف المستخدم (User ID):</span>
-                        </span>
-                        <p className="text-slate-300 font-mono text-[11px] truncate" dir="ltr">
-                            {isLoading ? "..." : user?.id}
-                        </p>
-                    </div>
-
-                    <div className="space-y-1">
-                        <span className="text-slate-400 flex items-center gap-1.5">
-                            <KeyRound className="size-3.5 text-amber-400" />
-                            <span>نوع الجلسة:</span>
-                        </span>
-                        <p className="text-emerald-400 text-xs font-semibold">
-                            JWT Cookie Session (7 Days)
-                        </p>
-                    </div>
+                    
                 </div>
             </div>
 

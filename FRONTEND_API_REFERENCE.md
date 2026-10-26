@@ -471,10 +471,11 @@ All API endpoints return JSON conforming to one of the following standard envelo
 - **Request Body**:
   ```json
   {
-    "name": "Web Development",   // string, required, 1-100 chars
-    "slug": "web-development",   // string, required, lowercase alphanumeric + hyphens
-    "sort_order": 0,             // integer, optional (default: 0)
-    "is_active": true            // boolean, optional (default: true)
+    "name": "Web Development",       // string, required, 1-100 chars (English / default name)
+    "name_ar": "تطوير الويب",         // string, optional, 1-100 chars (Arabic name)
+    "slug": "web-development",       // string, required, lowercase alphanumeric + hyphens
+    "sort_order": 0,                 // integer, optional (default: 0)
+    "is_active": true                // boolean, optional (default: true)
   }
   ```
 - **Response** (`201 Created`): New category object.
@@ -483,8 +484,18 @@ All API endpoints return JSON conforming to one of the following standard envelo
 - **Endpoint**: `PUT /api/categories/:id`
 - **Access**: Protected (Role: `admin`)
 - **Path Parameters**: `id` (UUID, required)
-- **Request Body**: Same fields as Create Category, all optional.
+- **Request Body**: Same fields as Create Category (`name`, `name_ar`, `slug`, `sort_order`, `is_active`), all optional.
 - **Response** (`200 OK`): Updated category object.
+
+> [!TIP]
+> **Localization Pattern**:
+> When displaying category names based on the active locale, resolve the Arabic name with fallback to the default name:
+> ```typescript
+> const categoryName =
+>   locale === "ar"
+>     ? category.name_ar || category.name
+>     : category.name;
+> ```
 
 ### 5.6 Delete Category
 - **Endpoint**: `DELETE /api/categories/:id`

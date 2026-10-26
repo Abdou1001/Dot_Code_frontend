@@ -24,7 +24,7 @@ export default function AuthProvider({children}: {children: React.ReactNode}) {
     if (isLoading) {
         return (
             <div className="w-full h-[100dvh] flex justify-center items-center">
-                <Spinner className="size-8" />;
+                <Spinner className="size-8" />
             </div>
         );
     }
