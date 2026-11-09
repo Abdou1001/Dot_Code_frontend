@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
     AreaChart,
     Area,
@@ -18,7 +19,7 @@ export interface DailyTrendsChartProps {
     data: DailyTrendItem[];
 }
 
-export function DailyTrendsChart({data}: DailyTrendsChartProps) {
+function DailyTrendsChartComponent({data}: DailyTrendsChartProps) {
     return (
         <div className="vision-card rounded-2xl p-5 lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
@@ -83,3 +84,6 @@ export function DailyTrendsChart({data}: DailyTrendsChartProps) {
         </div>
     );
 }
+
+export const DailyTrendsChart = React.memo(DailyTrendsChartComponent);
+export default DailyTrendsChart;

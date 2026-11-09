@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {PieChart, Pie, Cell, Tooltip, ResponsiveContainer} from "recharts";
 
 const DEVICE_COLORS: Record<string, string> = {
@@ -18,7 +19,7 @@ export interface DeviceBreakdownChartProps {
     data: DeviceBreakdownItem[];
 }
 
-export function DeviceBreakdownChart({data}: DeviceBreakdownChartProps) {
+function DeviceBreakdownChartComponent({data}: DeviceBreakdownChartProps) {
     return (
         <div className="vision-card rounded-2xl p-5 flex flex-col justify-between">
             <div>
@@ -87,3 +88,6 @@ export function DeviceBreakdownChart({data}: DeviceBreakdownChartProps) {
         </div>
     );
 }
+
+export const DeviceBreakdownChart = React.memo(DeviceBreakdownChartComponent);
+export default DeviceBreakdownChart;

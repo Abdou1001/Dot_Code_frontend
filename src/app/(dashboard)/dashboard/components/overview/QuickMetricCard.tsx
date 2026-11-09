@@ -1,3 +1,4 @@
+import React from "react";
 import {LucideIcon, ChevronLeft} from "lucide-react";
 import {cn} from "@/lib/utils";
 import Link from "next/link";
@@ -36,7 +37,7 @@ const VARIANT_STYLES = {
     },
 };
 
-export function QuickMetricCard({
+function QuickMetricCardComponent({
     title,
     value,
     icon: Icon,
@@ -110,3 +111,6 @@ export function QuickMetricCard({
 
     return content;
 }
+
+export const QuickMetricCard = React.memo(QuickMetricCardComponent);
+export default QuickMetricCard;

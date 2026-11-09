@@ -1,3 +1,4 @@
+import React from "react";
 import {LucideIcon, TrendingUp} from "lucide-react";
 import {cn} from "@/lib/utils";
 
@@ -13,7 +14,7 @@ export interface StatCardProps {
     className?: string;
 }
 
-export function StatCard({
+function StatCardComponent({
     title,
     value,
     icon: Icon,
@@ -57,3 +58,6 @@ export function StatCard({
         </div>
     );
 }
+
+export const StatCard = React.memo(StatCardComponent);
+export default StatCard;

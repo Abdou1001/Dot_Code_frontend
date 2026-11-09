@@ -1,3 +1,4 @@
+import React from "react";
 import {Globe2} from "lucide-react";
 
 export interface TopCountryItem {
@@ -9,7 +10,7 @@ export interface TopCountriesListProps {
     data: TopCountryItem[];
 }
 
-export function TopCountriesList({data}: TopCountriesListProps) {
+function TopCountriesListComponent({data}: TopCountriesListProps) {
     const countries = data.slice(0, 5);
     const maxCount = countries[0]?.count || 1;
 
@@ -54,3 +55,6 @@ export function TopCountriesList({data}: TopCountriesListProps) {
         </div>
     );
 }
+
+export const TopCountriesList = React.memo(TopCountriesListComponent);
+export default TopCountriesList;

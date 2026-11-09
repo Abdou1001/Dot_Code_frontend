@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import DataTableToolbar from "@/app/(dashboard)/dashboard/components/table/DataTableToolbar";
 import {
     Select,
@@ -15,7 +16,7 @@ interface AnalyticsEventsToolbarProps {
     onDeviceFilterChange: (value: string) => void;
 }
 
-export function AnalyticsEventsToolbar({
+function AnalyticsEventsToolbarComponent({
     deviceFilter,
     onSearch,
     onDeviceFilterChange,
@@ -41,3 +42,6 @@ export function AnalyticsEventsToolbar({
         </DataTableToolbar>
     );
 }
+
+export const AnalyticsEventsToolbar = React.memo(AnalyticsEventsToolbarComponent);
+export default AnalyticsEventsToolbar;

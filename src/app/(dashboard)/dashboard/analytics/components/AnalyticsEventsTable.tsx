@@ -1,6 +1,6 @@
 "use client";
 
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import {ColumnDef} from "@tanstack/react-table";
 import {Laptop, Smartphone} from "lucide-react";
 import {VisitorEvent} from "@/types/data";
@@ -10,6 +10,7 @@ import {Badge} from "@/components/ui/badge";
 interface AnalyticsEventsTableProps {
     data: VisitorEvent[];
     isLoading: boolean;
+    isFetching?: boolean;
     pagination?: {
         page: number;
         totalPages: number;
@@ -18,9 +19,10 @@ interface AnalyticsEventsTableProps {
     onPageChange: (page: number) => void;
 }
 
-export function AnalyticsEventsTable({
+function AnalyticsEventsTableComponent({
     data,
     isLoading,
+    isFetching,
     pagination,
     onPageChange,
 }: AnalyticsEventsTableProps) {
@@ -118,8 +120,14 @@ export function AnalyticsEventsTable({
             columns={columns}
             data={data}
             isLoading={isLoading}
+            isFetching={isFetching}
             pagination={pagination}
             onPageChange={onPageChange}
+            emptyTitle="لا توجد سجلات زوار"
+            emptyDescription="لم يتم تسجيل أي أحداث زيارة تطابق الفلاتر المحددة."
         />
     );
 }
+
+export const AnalyticsEventsTable = React.memo(AnalyticsEventsTableComponent);
+export default AnalyticsEventsTable;

@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface TopPageItem {
     item: string;
     count: number;
@@ -7,7 +9,7 @@ export interface TopPagesListProps {
     data: TopPageItem[];
 }
 
-export function TopPagesList({data}: TopPagesListProps) {
+function TopPagesListComponent({data}: TopPagesListProps) {
     const pages = data.slice(0, 5);
     const maxCount = pages[0]?.count || 1;
 
@@ -49,3 +51,6 @@ export function TopPagesList({data}: TopPagesListProps) {
         </div>
     );
 }
+
+export const TopPagesList = React.memo(TopPagesListComponent);
+export default TopPagesList;

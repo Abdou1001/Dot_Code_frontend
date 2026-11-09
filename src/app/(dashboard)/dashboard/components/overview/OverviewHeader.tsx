@@ -1,3 +1,4 @@
+import React from "react";
 import {RefreshCw} from "lucide-react";
 import {Button} from "@/components/ui/button";
 
@@ -7,7 +8,7 @@ export interface OverviewHeaderProps {
     onRefresh: () => void;
 }
 
-export function OverviewHeader({
+function OverviewHeaderComponent({
     timeframeDays,
     onTimeframeChange,
     onRefresh,
@@ -51,3 +52,6 @@ export function OverviewHeader({
         </div>
     );
 }
+
+export const OverviewHeader = React.memo(OverviewHeaderComponent);
+export default OverviewHeader;
