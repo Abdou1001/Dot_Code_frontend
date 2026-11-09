@@ -70,7 +70,7 @@ export const logout = async (): Promise<ApiResponse<null>> => {
 };
 
 // 2.9 Get Current Authenticated User: GET /api/auth/me
-export const getMe = async (): Promise<ApiResponse<AuthUserResponse>> => {
-    const {data} = await api.get<ApiResponse<AuthUserResponse>>(`/${RESOURCE}/me`);
+export const getMe = async (signal?: AbortSignal): Promise<ApiResponse<AuthUserResponse>> => {
+    const {data} = await api.get<ApiResponse<AuthUserResponse>>(`/${RESOURCE}/me`, {signal});
     return data;
 };

@@ -1,6 +1,6 @@
 import {useMutation} from "@tanstack/react-query";
 import {toast} from "sonner";
-import {logout} from "@/api/auth.api";
+import {logout} from "@/services/auth.api";
 import {useAuth} from "@/hooks/auth/useAuth";
 import {useRouter} from "next/navigation";
 import {getApiErrorMessage} from "@/hooks/useApiError";

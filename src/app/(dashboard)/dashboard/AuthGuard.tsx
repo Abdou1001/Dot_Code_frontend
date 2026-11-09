@@ -12,6 +12,7 @@ type AuthGuardProps = {
 export default function AuthGuard({children, allowedRoles}: AuthGuardProps) {
     const router = useRouter();
     const {user, isLoading} = useAuth();
+    const allowedRolesKey = allowedRoles ? allowedRoles.join(",") : "";
 
     useEffect(() => {
         if (isLoading) return;
@@ -19,10 +20,10 @@ export default function AuthGuard({children, allowedRoles}: AuthGuardProps) {
             router.replace("/login");
             return;
         }
-        if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+        if (allowedRolesKey && !allowedRolesKey.split(",").includes(user.role)) {
             router.replace("/login");
         }
-    }, [user, isLoading, allowedRoles, router]);
+    }, [user, isLoading, allowedRolesKey, router]);
 
     return <>{children}</>;
 }
