@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import DataTableToolbar from "@/app/(dashboard)/dashboard/components/table/DataTableToolbar";
 import {
     Select,
@@ -10,14 +11,14 @@ import {
 } from "@/components/ui/select";
 
 interface ProjectTableToolbarProps {
-    search: string;
+    search?: string;
     onSearch: (value: string) => void;
     statusFilter: string;
     onStatusFilterChange: (status: string) => void;
     onAddNew: () => void;
 }
 
-export function ProjectTableToolbar({
+function ProjectTableToolbarComponent({
     search,
     onSearch,
     statusFilter,
@@ -26,6 +27,7 @@ export function ProjectTableToolbar({
 }: ProjectTableToolbarProps) {
     return (
         <DataTableToolbar
+            searchValue={search}
             searchPlaceholder="بحث في المشاريع بالـ slug..."
             buttonText="إضافة مشروع جديد"
             onSearch={onSearch}
@@ -48,3 +50,6 @@ export function ProjectTableToolbar({
         </DataTableToolbar>
     );
 }
+
+export const ProjectTableToolbar = React.memo(ProjectTableToolbarComponent);
+export default ProjectTableToolbar;

@@ -12,6 +12,7 @@ import {
 import {Badge} from "@/components/ui/badge";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Code2, FolderTree, Plus, X} from "lucide-react";
+import {TechnologyIcon} from "@/components/shared/TechnologyIcon";
 import {Project, Technology, Category} from "@/types/data";
 import {
     getProjectTechnologies,
@@ -162,6 +163,7 @@ export function ProjectRelationsDialog({open, onOpenChange, project}: ProjectRel
                                     <Badge
                                         key={t.id}
                                         className="bg-blue-600/20 text-blue-300 border-blue-500/30 pl-1.5 flex items-center gap-1.5 text-xs py-1">
+                                        <TechnologyIcon icon={t.icon} name={t.name} size={14} className="shrink-0" />
                                         <span>{t.name}</span>
                                         <button
                                             type="button"
@@ -186,8 +188,9 @@ export function ProjectRelationsDialog({open, onOpenChange, project}: ProjectRel
                                             type="button"
                                             onClick={() => assignTechMutation.mutate(t.id)}
                                             disabled={assignTechMutation.isPending}
-                                            className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-white/5 hover:border-blue-500/30 text-xs transition-colors flex items-center gap-1">
+                                            className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-white/5 hover:border-blue-500/30 text-xs transition-colors flex items-center gap-1.5">
                                             <Plus className="size-3" />
+                                            <TechnologyIcon icon={t.icon} name={t.name} size={14} className="shrink-0" />
                                             <span>{t.name}</span>
                                         </button>
                                     ))}

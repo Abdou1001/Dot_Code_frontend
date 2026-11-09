@@ -25,10 +25,10 @@ export default function EditProjectPage({
         isError,
     } = useQuery({
         queryKey: ["project-edit", projectId],
-        queryFn: async () => {
+        queryFn: async ({signal}) => {
             // First search in dashboard projects list
             try {
-                const list = await getDashboardProjects({limit: 100});
+                const list = await getDashboardProjects({limit: 100}, signal);
                 const found = list.results.find(
                     (p) => p.id === projectId || p.slug === projectId
                 );
@@ -36,7 +36,7 @@ export default function EditProjectPage({
             } catch {}
 
             // Fallback to getProjectBySlug
-            const res = await getProjectBySlug(projectId);
+            const res = await getProjectBySlug(projectId, undefined, signal);
             return res.results;
         },
     });
@@ -44,8 +44,8 @@ export default function EditProjectPage({
     // Fetch translations
     const {data: translations, isLoading: isTransLoading} = useQuery({
         queryKey: ["project-translations-edit", projectId],
-        queryFn: async () => {
-            const res = await getProjectTranslations(projectId);
+        queryFn: async ({signal}) => {
+            const res = await getProjectTranslations(projectId, signal);
             return res.results || [];
         },
         enabled: Boolean(projectId),
