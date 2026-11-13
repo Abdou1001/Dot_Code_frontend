@@ -1,4 +1,4 @@
-import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {useQuery, useMutation, useQueryClient, keepPreviousData} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {
     getDashboardCategories,
@@ -14,22 +14,30 @@ import {getApiErrorMessage} from "@/hooks/useApiError";
 
 export const useCategories = (params?: CategoryListParams) => {
     return useQuery({
-        queryKey: ["dashboard-categories", params?.page, params?.search, params?.is_active],
-        queryFn: () => getDashboardCategories(params),
+        queryKey: [
+            "dashboard-categories",
+            params?.page,
+            params?.limit,
+            params?.search,
+            params?.is_active,
+        ],
+        queryFn: ({signal}) => getDashboardCategories(params, signal),
+        placeholderData: keepPreviousData,
     });
 };
 
 export const useActiveCategories = () => {
     return useQuery({
         queryKey: ["active-categories"],
-        queryFn: () => getActiveCategories(),
+        queryFn: ({signal}) => getActiveCategories(signal),
+        staleTime: 10 * 60 * 1000, // 10 minutes cache for static categories
     });
 };
 
 export const useCategory = (id?: string) => {
     return useQuery({
         queryKey: ["category", id],
-        queryFn: () => getCategoryById(id!),
+        queryFn: ({signal}) => getCategoryById(id!, signal),
         enabled: Boolean(id),
     });
 };

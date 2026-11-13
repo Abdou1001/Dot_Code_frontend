@@ -15,16 +15,16 @@ export type CreateCategoryPayload = NamedEntityPayload;
 const RESOURCE = "categories";
 
 // 5.1 Admin Dashboard: List Categories
-export const getDashboardCategories = (params?: CategoryListParams) =>
-    getDashboardResource<Category>(RESOURCE, params);
+export const getDashboardCategories = (params?: CategoryListParams, signal?: AbortSignal) =>
+    getDashboardResource<Category>(RESOURCE, params, signal);
 
 // 5.2 Public: List Active Categories
-export const getActiveCategories = () =>
-    getActiveResource<Category>(RESOURCE);
+export const getActiveCategories = (signal?: AbortSignal) =>
+    getActiveResource<Category>(RESOURCE, undefined, signal);
 
 // 5.3 Get Category by ID or Slug
-export const getCategoryById = (id: string) =>
-    getResourceById<Category>(RESOURCE, id);
+export const getCategoryById = (id: string, signal?: AbortSignal) =>
+    getResourceById<Category>(RESOURCE, id, undefined, signal);
 
 // 5.4 Create Category
 export const createCategory = (payload: CreateCategoryPayload) =>
