@@ -1,6 +1,6 @@
 "use client";
 
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import {ColumnDef} from "@tanstack/react-table";
 import {Star, User} from "lucide-react";
 import Image from "next/image";
@@ -12,6 +12,7 @@ import DataTableActions from "@/app/(dashboard)/dashboard/components/table/DataT
 interface TestimonialsTableProps {
     data: Testimonial[];
     isLoading: boolean;
+    isFetching?: boolean;
     pagination?: {
         page: number;
         totalPages: number;
@@ -22,9 +23,10 @@ interface TestimonialsTableProps {
     onDelete: (id: string) => void;
 }
 
-export function TestimonialsTable({
+function TestimonialsTableComponent({
     data,
     isLoading,
+    isFetching,
     pagination,
     onPageChange,
     onEdit,
@@ -45,6 +47,7 @@ export function TestimonialsTable({
                                         src={item.client_image_url}
                                         alt={item.client_name}
                                         fill
+                                        sizes="40px"
                                         className="object-cover"
                                     />
                                 ) : (
@@ -122,8 +125,14 @@ export function TestimonialsTable({
             columns={columns}
             data={data}
             isLoading={isLoading}
+            isFetching={isFetching}
             pagination={pagination}
             onPageChange={onPageChange}
+            emptyTitle="لا توجد آراء عملاء"
+            emptyDescription="لم يتم العثور على أي آراء عملاء تطابق معايير البحث أو التصفية الحالية."
         />
     );
 }
+
+export const TestimonialsTable = React.memo(TestimonialsTableComponent);
+export default TestimonialsTable;

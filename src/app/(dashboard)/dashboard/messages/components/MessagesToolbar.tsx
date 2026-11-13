@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import DataTableToolbar from "@/app/(dashboard)/dashboard/components/table/DataTableToolbar";
 import {
     Select,
@@ -15,7 +16,7 @@ interface MessagesToolbarProps {
     onStatusFilterChange: (value: string) => void;
 }
 
-export function MessagesToolbar({
+function MessagesToolbarComponent({
     statusFilter,
     onSearch,
     onStatusFilterChange,
@@ -43,3 +44,6 @@ export function MessagesToolbar({
         </DataTableToolbar>
     );
 }
+
+export const MessagesToolbar = React.memo(MessagesToolbarComponent);
+export default MessagesToolbar;

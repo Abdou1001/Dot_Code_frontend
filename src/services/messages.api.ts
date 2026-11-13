@@ -12,12 +12,12 @@ export type MessageListParams = SharedMessageListParams;
 const RESOURCE = "messages";
 
 // 9.2 Admin Dashboard: List Messages
-export const getDashboardMessages = (params?: MessageListParams) =>
-    getDashboardResource<ContactMessage>(RESOURCE, params);
+export const getDashboardMessages = (params?: MessageListParams, signal?: AbortSignal) =>
+    getDashboardResource<ContactMessage>(RESOURCE, params, signal);
 
 // 9.3 Get Message by ID
-export const getMessageById = (id: string) =>
-    getResourceById<ContactMessage>(RESOURCE, id);
+export const getMessageById = (id: string, signal?: AbortSignal) =>
+    getResourceById<ContactMessage>(RESOURCE, id, undefined, signal);
 
 // 9.4 Update Message Status
 export const updateMessageStatus = (

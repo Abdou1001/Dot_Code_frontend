@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import DataTableToolbar from "@/app/(dashboard)/dashboard/components/table/DataTableToolbar";
 import {
     Select,
@@ -16,7 +17,7 @@ interface TestimonialsToolbarProps {
     onAdd: () => void;
 }
 
-export function TestimonialsToolbar({
+function TestimonialsToolbarComponent({
     publishedFilter,
     onSearch,
     onPublishedFilterChange,
@@ -45,3 +46,6 @@ export function TestimonialsToolbar({
         </DataTableToolbar>
     );
 }
+
+export const TestimonialsToolbar = React.memo(TestimonialsToolbarComponent);
+export default TestimonialsToolbar;

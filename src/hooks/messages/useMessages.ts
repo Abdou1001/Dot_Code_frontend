@@ -1,4 +1,4 @@
-import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {useQuery, useMutation, useQueryClient, keepPreviousData} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {
     getDashboardMessages,
@@ -11,22 +11,30 @@ import {getApiErrorMessage} from "@/hooks/useApiError";
 
 export const useMessages = (params?: MessageListParams) => {
     return useQuery({
-        queryKey: ["dashboard-messages", params?.page, params?.search, params?.status],
-        queryFn: () => getDashboardMessages(params),
+        queryKey: [
+            "dashboard-messages",
+            params?.page,
+            params?.limit,
+            params?.search,
+            params?.status,
+        ],
+        queryFn: ({signal}) => getDashboardMessages(params, signal),
+        placeholderData: keepPreviousData,
     });
 };
 
 export const useMessagesCount = () => {
     return useQuery({
         queryKey: ["dashboard-messages-count"],
-        queryFn: () => getDashboardMessages({limit: 1}),
+        queryFn: ({signal}) => getDashboardMessages({limit: 1}, signal),
+        staleTime: 2 * 60 * 1000,
     });
 };
 
 export const useMessage = (id?: string) => {
     return useQuery({
         queryKey: ["dashboard-message", id],
-        queryFn: () => getMessageById(id!),
+        queryFn: ({signal}) => getMessageById(id!, signal),
         enabled: Boolean(id),
     });
 };

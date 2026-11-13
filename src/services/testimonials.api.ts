@@ -12,12 +12,12 @@ export type TestimonialListParams = SharedTestimonialListParams;
 const RESOURCE = "testimonials";
 
 // 8.1 Admin Dashboard: List Testimonials
-export const getDashboardTestimonials = (params?: TestimonialListParams) =>
-    getDashboardResource<Testimonial>(RESOURCE, params);
+export const getDashboardTestimonials = (params?: TestimonialListParams, signal?: AbortSignal) =>
+    getDashboardResource<Testimonial>(RESOURCE, params, signal);
 
 // 8.3 Get Testimonial by ID
-export const getTestimonialById = (id: string) =>
-    getResourceById<Testimonial>(RESOURCE, id);
+export const getTestimonialById = (id: string, signal?: AbortSignal) =>
+    getResourceById<Testimonial>(RESOURCE, id, undefined, signal);
 
 // 8.4 Create Testimonial (supports multipart/form-data for image)
 export const createTestimonial = async (payload: FormData | object): Promise<ApiResponse<Testimonial>> => {

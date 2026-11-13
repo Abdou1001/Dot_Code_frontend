@@ -1,4 +1,4 @@
-import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {useQuery, useMutation, useQueryClient, keepPreviousData} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {
     getDashboardTestimonials,
@@ -12,22 +12,31 @@ import {getApiErrorMessage} from "@/hooks/useApiError";
 
 export const useTestimonials = (params?: TestimonialListParams) => {
     return useQuery({
-        queryKey: ["dashboard-testimonials", params?.page, params?.search, params?.is_published, params?.is_featured],
-        queryFn: () => getDashboardTestimonials(params),
+        queryKey: [
+            "dashboard-testimonials",
+            params?.page,
+            params?.limit,
+            params?.search,
+            params?.is_published,
+            params?.is_featured,
+        ],
+        queryFn: ({signal}) => getDashboardTestimonials(params, signal),
+        placeholderData: keepPreviousData,
     });
 };
 
 export const useTestimonialsCount = () => {
     return useQuery({
         queryKey: ["dashboard-testimonials-count"],
-        queryFn: () => getDashboardTestimonials({limit: 1}),
+        queryFn: ({signal}) => getDashboardTestimonials({limit: 1}, signal),
+        staleTime: 2 * 60 * 1000,
     });
 };
 
 export const useTestimonial = (id?: string) => {
     return useQuery({
         queryKey: ["dashboard-testimonial", id],
-        queryFn: () => getTestimonialById(id!),
+        queryFn: ({signal}) => getTestimonialById(id!, signal),
         enabled: Boolean(id),
     });
 };

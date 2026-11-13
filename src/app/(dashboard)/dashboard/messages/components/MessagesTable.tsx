@@ -1,6 +1,6 @@
 "use client";
 
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import {ColumnDef} from "@tanstack/react-table";
 import {ContactMessage} from "@/types/data";
 import {DataTable} from "@/app/(dashboard)/dashboard/components/table/DataTable";
@@ -10,6 +10,7 @@ import DataTableActions from "@/app/(dashboard)/dashboard/components/table/DataT
 interface MessagesTableProps {
     data: ContactMessage[];
     isLoading: boolean;
+    isFetching?: boolean;
     pagination?: {
         page: number;
         totalPages: number;
@@ -20,9 +21,10 @@ interface MessagesTableProps {
     onDelete: (id: string) => void;
 }
 
-export function MessagesTable({
+function MessagesTableComponent({
     data,
     isLoading,
+    isFetching,
     pagination,
     onPageChange,
     onView,
@@ -112,8 +114,14 @@ export function MessagesTable({
             columns={columns}
             data={data}
             isLoading={isLoading}
+            isFetching={isFetching}
             pagination={pagination}
             onPageChange={onPageChange}
+            emptyTitle="صندوق الرسائل فارغ"
+            emptyDescription="لم يتم العثور على أي رسائل واردة تطابق معايير البحث الحالية."
         />
     );
 }
+
+export const MessagesTable = React.memo(MessagesTableComponent);
+export default MessagesTable;
