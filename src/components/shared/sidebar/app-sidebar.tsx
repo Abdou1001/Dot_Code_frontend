@@ -5,7 +5,6 @@ import {
     SidebarContent,
     SidebarFooter,
     SidebarHeader,
-    useSidebar,
 } from "@/components/ui/sidebar";
 import NavMain from "./navMain";
 import { NavUser } from "./nav-user";
@@ -13,8 +12,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 export function AppSidebar() {
-    const { state } = useSidebar();
-
     return (
         <Sidebar
             collapsible="icon"

@@ -20,3 +20,5 @@ tsconfig.tsbuildinfo
 # Logs
 npm-debug.log*
 "@ | Add-Content .gitignore
+
+.agents
