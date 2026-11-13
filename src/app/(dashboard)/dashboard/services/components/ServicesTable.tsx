@@ -1,6 +1,6 @@
 "use client";
 
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import {ColumnDef} from "@tanstack/react-table";
 import {Wrench} from "lucide-react";
 import {Service} from "@/types/data";
@@ -11,6 +11,7 @@ import DataTableActions from "@/app/(dashboard)/dashboard/components/table/DataT
 interface ServicesTableProps {
     data: Service[];
     isLoading: boolean;
+    isFetching?: boolean;
     pagination?: {
         page: number;
         totalPages: number;
@@ -21,9 +22,10 @@ interface ServicesTableProps {
     onDelete: (id: string) => void;
 }
 
-export function ServicesTable({
+function ServicesTableComponent({
     data,
     isLoading,
+    isFetching,
     pagination,
     onPageChange,
     onEdit,
@@ -95,8 +97,14 @@ export function ServicesTable({
             columns={columns}
             data={data}
             isLoading={isLoading}
+            isFetching={isFetching}
             pagination={pagination}
             onPageChange={onPageChange}
+            emptyTitle="لا توجد خدمات"
+            emptyDescription="لم يتم العثور على أي خدمات تطابق معايير البحث الحالية."
         />
     );
 }
+
+export const ServicesTable = React.memo(ServicesTableComponent);
+export default ServicesTable;

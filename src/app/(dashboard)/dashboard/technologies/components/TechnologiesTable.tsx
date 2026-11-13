@@ -1,9 +1,9 @@
 "use client";
 
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import {ColumnDef} from "@tanstack/react-table";
-import {Code2} from "lucide-react";
 import {Technology} from "@/types/data";
+import {TechnologyIcon} from "@/components/shared/TechnologyIcon";
 import {DataTable} from "@/app/(dashboard)/dashboard/components/table/DataTable";
 import DataTableStatus from "@/app/(dashboard)/dashboard/components/table/DataTableStatus";
 import DataTableActions from "@/app/(dashboard)/dashboard/components/table/DataTableActions";
@@ -11,6 +11,7 @@ import DataTableActions from "@/app/(dashboard)/dashboard/components/table/DataT
 interface TechnologiesTableProps {
     data: Technology[];
     isLoading: boolean;
+    isFetching?: boolean;
     pagination?: {
         page: number;
         totalPages: number;
@@ -21,9 +22,10 @@ interface TechnologiesTableProps {
     onDelete: (id: string) => void;
 }
 
-export function TechnologiesTable({
+function TechnologiesTableComponent({
     data,
     isLoading,
+    isFetching,
     pagination,
     onPageChange,
     onEdit,
@@ -37,10 +39,13 @@ export function TechnologiesTable({
                 cell: ({row}) => {
                     const tech = row.original;
                     return (
-                        <div className="flex items-center gap-3 py-1">
-                            <div className="size-8 rounded-lg bg-blue-600/15 border border-blue-500/25 flex items-center justify-center text-blue-400 font-bold text-xs">
-                                <Code2 className="size-4" />
-                            </div>
+                        <div className="flex items-center gap-2.5 py-1">
+                            <TechnologyIcon
+                                icon={tech.icon}
+                                name={tech.name}
+                                size={22}
+                                className="shrink-0"
+                            />
                             <span className="font-semibold text-white text-sm">
                                 {tech.name}
                             </span>
@@ -104,8 +109,14 @@ export function TechnologiesTable({
             columns={columns}
             data={data}
             isLoading={isLoading}
+            isFetching={isFetching}
             pagination={pagination}
             onPageChange={onPageChange}
+            emptyTitle="لا توجد تقنيات"
+            emptyDescription="لم يتم العثور على أي تقنيات تطابق معايير البحث الحالية."
         />
     );
 }
+
+export const TechnologiesTable = React.memo(TechnologiesTableComponent);
+export default TechnologiesTable;

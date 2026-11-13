@@ -1,4 +1,4 @@
-import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {useQuery, useMutation, useQueryClient, keepPreviousData} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {
     getDashboardTechnologies,
@@ -14,22 +14,30 @@ import {getApiErrorMessage} from "@/hooks/useApiError";
 
 export const useTechnologies = (params?: TechnologyListParams) => {
     return useQuery({
-        queryKey: ["dashboard-technologies", params?.page, params?.search, params?.is_active],
-        queryFn: () => getDashboardTechnologies(params),
+        queryKey: [
+            "dashboard-technologies",
+            params?.page,
+            params?.limit,
+            params?.search,
+            params?.is_active,
+        ],
+        queryFn: ({signal}) => getDashboardTechnologies(params, signal),
+        placeholderData: keepPreviousData,
     });
 };
 
 export const useActiveTechnologies = () => {
     return useQuery({
         queryKey: ["active-technologies"],
-        queryFn: () => getActiveTechnologies(),
+        queryFn: ({signal}) => getActiveTechnologies(signal),
+        staleTime: 10 * 60 * 1000, // 10 minutes cache for static technologies
     });
 };
 
 export const useTechnology = (id?: string) => {
     return useQuery({
         queryKey: ["technology", id],
-        queryFn: () => getTechnologyById(id!),
+        queryFn: ({signal}) => getTechnologyById(id!, signal),
         enabled: Boolean(id),
     });
 };

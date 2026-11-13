@@ -18,6 +18,7 @@ import {Label} from "@/components/ui/label";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Loader2} from "lucide-react";
 import {Technology} from "@/types/data";
+import {TechnologyIcon} from "@/components/shared/TechnologyIcon";
 import {createTechnology, updateTechnology} from "@/services/technologies.api";
 import {getApiErrorMessage} from "@/hooks/useApiError";
 
@@ -57,6 +58,7 @@ export function TechnologyDialog({open, onOpenChange, technologyToEdit}: Technol
     });
 
     const isActive = watch("is_active");
+    const currentIcon = watch("icon");
 
     useEffect(() => {
         if (technologyToEdit && open) {
@@ -144,13 +146,29 @@ export function TechnologyDialog({open, onOpenChange, technologyToEdit}: Technol
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-xs text-slate-300">معرّف الأيقونة أو الرابط (Icon)</Label>
-                        <Input
-                            {...register("icon")}
-                            dir="ltr"
-                            placeholder="e.g. nextjs.svg or devicon-nextjs"
-                            className="border-white/10 bg-white/5 text-slate-100 text-xs"
-                        />
+                        <div className="flex items-center justify-between">
+                            <Label className="text-xs text-slate-300">معرّف الأيقونة في Simple Icons (Icon)</Label>
+                            {currentIcon && (
+                                <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
+                                    <span>معاينة:</span>
+                                    <TechnologyIcon icon={currentIcon} size={16} />
+                                </span>
+                            )}
+                        </div>
+                        <div className="relative flex items-center">
+                            <Input
+                                {...register("icon")}
+                                dir="ltr"
+                                placeholder="مثال: react, nextdotjs, typescript, docker"
+                                className="border-white/10 bg-white/5 text-slate-100 font-mono text-xs pl-9"
+                            />
+                            <div className="absolute left-2.5 flex items-center pointer-events-none">
+                                <TechnologyIcon icon={currentIcon} size={18} />
+                            </div>
+                        </div>
+                        <p className="text-[10px] text-slate-500">
+                            استخدم اسم المعرّف من Simple Icons (مثل: react, nextdotjs, postgresql, docker)
+                        </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 items-center pt-1">

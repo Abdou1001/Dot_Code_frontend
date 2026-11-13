@@ -15,16 +15,16 @@ export type CreateTechnologyPayload = NamedIconEntityPayload;
 const RESOURCE = "technologies";
 
 // 6.1 Admin Dashboard: List Technologies
-export const getDashboardTechnologies = (params?: TechnologyListParams) =>
-    getDashboardResource<Technology>(RESOURCE, params);
+export const getDashboardTechnologies = (params?: TechnologyListParams, signal?: AbortSignal) =>
+    getDashboardResource<Technology>(RESOURCE, params, signal);
 
 // 6.2 Public: List Active Technologies
-export const getActiveTechnologies = () =>
-    getActiveResource<Technology>(RESOURCE);
+export const getActiveTechnologies = (signal?: AbortSignal) =>
+    getActiveResource<Technology>(RESOURCE, undefined, signal);
 
 // 6.3 Get Technology by ID or Slug
-export const getTechnologyById = (id: string) =>
-    getResourceById<Technology>(RESOURCE, id);
+export const getTechnologyById = (id: string, signal?: AbortSignal) =>
+    getResourceById<Technology>(RESOURCE, id, undefined, signal);
 
 // 6.4 Create Technology
 export const createTechnology = (payload: CreateTechnologyPayload) =>

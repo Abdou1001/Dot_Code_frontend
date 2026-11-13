@@ -1,4 +1,4 @@
-import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {useQuery, useMutation, useQueryClient, keepPreviousData} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {
     getDashboardServices,
@@ -18,22 +18,30 @@ import {getApiErrorMessage} from "@/hooks/useApiError";
 
 export const useServices = (params?: ServiceListParams) => {
     return useQuery({
-        queryKey: ["dashboard-services", params?.page, params?.search, params?.is_active],
-        queryFn: () => getDashboardServices(params),
+        queryKey: [
+            "dashboard-services",
+            params?.page,
+            params?.limit,
+            params?.search,
+            params?.is_active,
+        ],
+        queryFn: ({signal}) => getDashboardServices(params, signal),
+        placeholderData: keepPreviousData,
     });
 };
 
 export const useActiveServices = () => {
     return useQuery({
         queryKey: ["active-services"],
-        queryFn: () => getActiveServices(),
+        queryFn: ({signal}) => getActiveServices(signal),
+        staleTime: 10 * 60 * 1000, // 10 minutes cache for static services
     });
 };
 
 export const useService = (id?: string) => {
     return useQuery({
         queryKey: ["service", id],
-        queryFn: () => getServiceById(id!),
+        queryFn: ({signal}) => getServiceById(id!, signal),
         enabled: Boolean(id),
     });
 };
@@ -90,7 +98,7 @@ export const useDeleteService = () => {
 export const useServiceTranslations = (serviceId?: string) => {
     return useQuery({
         queryKey: ["service-translations", serviceId],
-        queryFn: () => getServiceTranslations(serviceId!),
+        queryFn: ({signal}) => getServiceTranslations(serviceId!, signal),
         enabled: Boolean(serviceId),
     });
 };

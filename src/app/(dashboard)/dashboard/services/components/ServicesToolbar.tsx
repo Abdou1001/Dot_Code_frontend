@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import DataTableToolbar from "@/app/(dashboard)/dashboard/components/table/DataTableToolbar";
 import {
     Select,
@@ -16,7 +17,7 @@ interface ServicesToolbarProps {
     onAdd: () => void;
 }
 
-export function ServicesToolbar({
+function ServicesToolbarComponent({
     activeFilter,
     onSearch,
     onActiveFilterChange,
@@ -45,3 +46,6 @@ export function ServicesToolbar({
         </DataTableToolbar>
     );
 }
+
+export const ServicesToolbar = React.memo(ServicesToolbarComponent);
+export default ServicesToolbar;
