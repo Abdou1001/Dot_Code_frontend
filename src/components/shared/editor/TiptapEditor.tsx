@@ -34,7 +34,6 @@ interface TiptapEditorProps {
 export function TiptapEditor({
     value = "",
     onChange,
-    placeholder = "اكتب الوصف هنا...",
     dir = "rtl",
     minHeight = "220px",
     className,

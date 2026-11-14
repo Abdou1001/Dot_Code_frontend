@@ -10,7 +10,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {Loader2} from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface DeleteConfirmDialogProps {
     open: boolean;
@@ -34,7 +34,7 @@ export function DeleteConfirmDialog({
             <AlertDialogContent className="vision-card border-white/10 text-slate-100 max-w-md">
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-xl font-bold text-red-400">{title}</AlertDialogTitle>
-                    <AlertDialogDescription className="text-slate-300 text-sm">
+                    <AlertDialogDescription className="text-slate-300 text-sm text-right mt-2">
                         {description}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
