@@ -1,5 +1,6 @@
 "use client";
 
+import React, {useMemo} from "react";
 import {
     Pagination,
     PaginationContent,
@@ -17,57 +18,56 @@ interface DataTablePaginationProps {
     onPageChange: (page: number) => void;
 }
 
-export function DataTablePagination({
+function DataTablePaginationComponent({
     page,
     totalPages,
     totalResults,
     onPageChange,
 }: DataTablePaginationProps) {
-    const generatePages = () => {
-        const pages: (number | "...")[] = [];
+    const pages = useMemo(() => {
+        const result: (number | "...")[] = [];
 
         if (totalPages <= 7) {
             for (let i = 1; i <= totalPages; i++) {
-                pages.push(i);
+                result.push(i);
             }
         } else {
-            pages.push(1);
+            result.push(1);
 
             if (page > 3) {
-                pages.push("...");
+                result.push("...");
             }
 
             const start = Math.max(2, page - 1);
             const end = Math.min(totalPages - 1, page + 1);
 
             for (let i = start; i <= end; i++) {
-                pages.push(i);
+                result.push(i);
             }
 
             if (page < totalPages - 2) {
-                pages.push("...");
+                result.push("...");
             }
 
-            pages.push(totalPages);
+            result.push(totalPages);
         }
 
-        return pages;
-    };
+        return result;
+    }, [page, totalPages]);
 
     return (
-        <div className="mt-4 flex flex-col items-center justify-between gap-4 border-t pt-4 md:flex-row">
-            <p className="text-sm text-muted-foreground">
-                إجمالي النتائج: {totalResults}
+        <div className="mt-4 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-4 md:flex-row">
+            <p className="text-xs text-slate-400">
+                إجمالي النتائج: <span className="font-semibold text-slate-200">{totalResults}</span>
             </p>
 
-            <Pagination>
+            <Pagination className="mx-0 w-auto justify-end">
                 <PaginationContent>
                     <PaginationItem>
                         <PaginationPrevious
                             href="#"
                             onClick={(e) => {
                                 e.preventDefault();
-
                                 if (page > 1) {
                                     onPageChange(page - 1);
                                 }
@@ -76,15 +76,15 @@ export function DataTablePagination({
                             className={
                                 page === 1
                                     ? "pointer-events-none opacity-50"
-                                    : ""
+                                    : "hover:bg-white/10 text-slate-200"
                             }
                         />
                     </PaginationItem>
 
-                    {generatePages().map((item, index) => (
+                    {pages.map((item, index) => (
                         <PaginationItem key={index}>
                             {item === "..." ? (
-                                <PaginationEllipsis />
+                                <PaginationEllipsis className="text-slate-500" />
                             ) : (
                                 <PaginationLink
                                     href="#"
@@ -92,7 +92,12 @@ export function DataTablePagination({
                                     onClick={(e) => {
                                         e.preventDefault();
                                         onPageChange(item);
-                                    }}>
+                                    }}
+                                    className={
+                                        item === page
+                                            ? "bg-blue-600 text-white font-semibold shadow-[0_0_10px_rgba(0,117,255,0.4)]"
+                                            : "hover:bg-white/10 text-slate-300"
+                                    }>
                                     {item}
                                 </PaginationLink>
                             )}
@@ -104,7 +109,6 @@ export function DataTablePagination({
                             href="#"
                             onClick={(e) => {
                                 e.preventDefault();
-
                                 if (page < totalPages) {
                                     onPageChange(page + 1);
                                 }
@@ -113,7 +117,7 @@ export function DataTablePagination({
                             className={
                                 page === totalPages
                                     ? "pointer-events-none opacity-50"
-                                    : ""
+                                    : "hover:bg-white/10 text-slate-200"
                             }
                         />
                     </PaginationItem>
@@ -122,3 +126,6 @@ export function DataTablePagination({
         </div>
     );
 }
+
+export const DataTablePagination = React.memo(DataTablePaginationComponent);
+export default DataTablePagination;

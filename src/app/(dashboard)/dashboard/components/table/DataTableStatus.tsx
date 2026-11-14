@@ -1,3 +1,4 @@
+import React from "react";
 import {Badge} from "@/components/ui/badge";
 
 interface DataTableStatusProps {
@@ -5,7 +6,7 @@ interface DataTableStatusProps {
     type?: "project" | "boolean" | "message";
 }
 
-export function DataTableStatus({status, type = "boolean"}: DataTableStatusProps) {
+function DataTableStatusComponent({status, type = "boolean"}: DataTableStatusProps) {
     if (type === "project") {
         switch (status) {
             case "published":
@@ -76,4 +77,5 @@ export function DataTableStatus({status, type = "boolean"}: DataTableStatusProps
     );
 }
 
+export const DataTableStatus = React.memo(DataTableStatusComponent);
 export default DataTableStatus;

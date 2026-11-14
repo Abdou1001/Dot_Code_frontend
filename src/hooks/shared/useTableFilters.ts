@@ -1,9 +1,9 @@
 "use client";
 
-import {useMemo} from "react";
+import {useCallback, useMemo} from "react";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
-export function useTableFilters<T extends Record<string, any>>(
+export function useTableFilters<T extends Record<string, string | number | boolean | undefined | null>>(
     defaultFilters: T,
 ) {
     const router = useRouter();
@@ -13,7 +13,7 @@ export function useTableFilters<T extends Record<string, any>>(
     const filters = useMemo(() => {
         const values = {} as T;
 
-        Object.entries(defaultFilters).forEach(([key, defaultValue]) => {
+        for (const [key, defaultValue] of Object.entries(defaultFilters)) {
             const value = searchParams.get(key);
 
             if (typeof defaultValue === "number") {
@@ -23,24 +23,27 @@ export function useTableFilters<T extends Record<string, any>>(
             } else {
                 values[key as keyof T] = (value ?? defaultValue) as T[keyof T];
             }
-        });
+        }
 
         return values;
     }, [searchParams, defaultFilters]);
 
-    const setFilters = (values: Partial<T>) => {
-        const params = new URLSearchParams(searchParams.toString());
+    const setFilters = useCallback(
+        (values: Partial<T>) => {
+            const params = new URLSearchParams(searchParams.toString());
 
-        Object.entries(values).forEach(([key, value]) => {
-            if (value === "" || value === undefined || value === null) {
-                params.delete(key);
-            } else {
-                params.set(key, String(value));
-            }
-        });
+            Object.entries(values).forEach(([key, value]) => {
+                if (value === "" || value === undefined || value === null) {
+                    params.delete(key);
+                } else {
+                    params.set(key, String(value));
+                }
+            });
 
-        router.replace(`${pathname}?${params.toString()}`);
-    };
+            router.replace(`${pathname}?${params.toString()}`);
+        },
+        [searchParams, pathname, router]
+    );
 
     return {
         filters,

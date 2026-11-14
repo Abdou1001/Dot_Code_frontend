@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {Button} from "@/components/ui/button";
 import {Edit, Eye, Trash2} from "lucide-react";
 
@@ -10,7 +11,7 @@ interface DataTableActionsProps {
     children?: React.ReactNode;
 }
 
-export function DataTableActions({onEdit, onDelete, onView, children}: DataTableActionsProps) {
+function DataTableActionsComponent({onEdit, onDelete, onView, children}: DataTableActionsProps) {
     return (
         <div className="flex items-center gap-1.5 justify-end">
             {children}
@@ -51,4 +52,5 @@ export function DataTableActions({onEdit, onDelete, onView, children}: DataTable
     );
 }
 
+export const DataTableActions = React.memo(DataTableActionsComponent);
 export default DataTableActions;
