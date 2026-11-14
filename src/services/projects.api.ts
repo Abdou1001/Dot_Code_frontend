@@ -21,12 +21,12 @@ export type TranslationPayload = ProjectTranslationPayload;
 const RESOURCE = "projects";
 
 // 3.1 Admin Dashboard: List All Projects
-export const getDashboardProjects = (params?: ProjectListParams) =>
-    getDashboardResource<Project>(RESOURCE, params);
+export const getDashboardProjects = (params?: ProjectListParams, signal?: AbortSignal) =>
+    getDashboardResource<Project>(RESOURCE, params, signal);
 
 // 3.3 Get Single Project by Slug
-export const getProjectBySlug = (slug: string, locale?: "ar" | "en") =>
-    getResourceById<Project>(RESOURCE, slug, locale ? {locale} : undefined);
+export const getProjectBySlug = (slug: string, locale?: "ar" | "en", signal?: AbortSignal) =>
+    getResourceById<Project>(RESOURCE, slug, locale ? {locale} : undefined, signal);
 
 // 3.4 Create Project
 export const createProject = (payload: CreateProjectPayload) =>
@@ -45,8 +45,13 @@ export const deleteProject = (id: string) =>
     deleteResource(RESOURCE, id);
 
 // 4.1 Project Translations
-export const getProjectTranslations = async (projectId: string): Promise<ApiResponse<ProjectTranslation[]>> => {
-    const {data} = await api.get<ApiResponse<ProjectTranslation[]>>(`/${RESOURCE}/${projectId}/translations`);
+export const getProjectTranslations = async (
+    projectId: string,
+    signal?: AbortSignal
+): Promise<ApiResponse<ProjectTranslation[]>> => {
+    const {data} = await api.get<ApiResponse<ProjectTranslation[]>>(`/${RESOURCE}/${projectId}/translations`, {
+        signal,
+    });
     return data;
 };
 
@@ -65,8 +70,11 @@ export const deleteProjectTranslation = async (projectId: string, locale: "ar" |
 };
 
 // 4.2 Project Images
-export const getProjectImages = async (projectId: string): Promise<ApiResponse<ProjectImage[]>> => {
-    const {data} = await api.get<ApiResponse<ProjectImage[]>>(`/${RESOURCE}/${projectId}/images`);
+export const getProjectImages = async (
+    projectId: string,
+    signal?: AbortSignal
+): Promise<ApiResponse<ProjectImage[]>> => {
+    const {data} = await api.get<ApiResponse<ProjectImage[]>>(`/${RESOURCE}/${projectId}/images`, {signal});
     return data;
 };
 
@@ -92,8 +100,11 @@ export const deleteProjectImage = async (projectId: string, imageId: string): Pr
 };
 
 // 4.3 Project Technologies
-export const getProjectTechnologies = async (projectId: string): Promise<ApiResponse<Technology[]>> => {
-    const {data} = await api.get<ApiResponse<Technology[]>>(`/${RESOURCE}/${projectId}/technologies`);
+export const getProjectTechnologies = async (
+    projectId: string,
+    signal?: AbortSignal
+): Promise<ApiResponse<Technology[]>> => {
+    const {data} = await api.get<ApiResponse<Technology[]>>(`/${RESOURCE}/${projectId}/technologies`, {signal});
     return data;
 };
 
@@ -108,8 +119,11 @@ export const removeProjectTechnology = async (projectId: string, technologyId: s
 };
 
 // 4.4 Project Categories
-export const getProjectCategories = async (projectId: string): Promise<ApiResponse<Category[]>> => {
-    const {data} = await api.get<ApiResponse<Category[]>>(`/${RESOURCE}/${projectId}/categories`);
+export const getProjectCategories = async (
+    projectId: string,
+    signal?: AbortSignal
+): Promise<ApiResponse<Category[]>> => {
+    const {data} = await api.get<ApiResponse<Category[]>>(`/${RESOURCE}/${projectId}/categories`, {signal});
     return data;
 };
 

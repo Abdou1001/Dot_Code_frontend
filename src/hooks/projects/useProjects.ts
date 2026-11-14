@@ -1,4 +1,4 @@
-import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import {useQuery, useMutation, useQueryClient, keepPreviousData} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {
     getDashboardProjects,
@@ -21,15 +21,23 @@ import {ProjectStatus} from "@/types/enums";
 
 export const useProjects = (params?: ProjectListParams) => {
     return useQuery({
-        queryKey: ["dashboard-projects", params?.page, params?.search, params?.status],
-        queryFn: () => getDashboardProjects(params),
+        queryKey: [
+            "dashboard-projects",
+            params?.page,
+            params?.limit,
+            params?.search,
+            params?.status,
+        ],
+        queryFn: ({signal}) => getDashboardProjects(params, signal),
+        placeholderData: keepPreviousData,
     });
 };
 
 export const useProjectsCount = () => {
     return useQuery({
         queryKey: ["dashboard-projects-count"],
-        queryFn: () => getDashboardProjects({limit: 1}),
+        queryFn: ({signal}) => getDashboardProjects({limit: 1}, signal),
+        staleTime: 2 * 60 * 1000,
     });
 };
 
@@ -69,7 +77,7 @@ export const useUpdateProjectStatus = () => {
 export const useProjectImages = (projectId?: string, enabled = true) => {
     return useQuery({
         queryKey: ["project-images", projectId],
-        queryFn: () => getProjectImages(projectId!),
+        queryFn: ({signal}) => getProjectImages(projectId!, signal),
         enabled: Boolean(projectId && enabled),
     });
 };
@@ -132,7 +140,7 @@ export const useDeleteProjectImage = (projectId: string) => {
 export const useProjectTechnologies = (projectId?: string, enabled = true) => {
     return useQuery({
         queryKey: ["project-technologies", projectId],
-        queryFn: () => getProjectTechnologies(projectId!),
+        queryFn: ({signal}) => getProjectTechnologies(projectId!, signal),
         enabled: Boolean(projectId && enabled),
     });
 };
@@ -173,7 +181,7 @@ export const useRemoveProjectTechnology = (projectId: string) => {
 export const useProjectCategories = (projectId?: string, enabled = true) => {
     return useQuery({
         queryKey: ["project-categories", projectId],
-        queryFn: () => getProjectCategories(projectId!),
+        queryFn: ({signal}) => getProjectCategories(projectId!, signal),
         enabled: Boolean(projectId && enabled),
     });
 };

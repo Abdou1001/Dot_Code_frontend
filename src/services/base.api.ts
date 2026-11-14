@@ -6,26 +6,38 @@ import {ApiResponse} from "@/types/data";
  */
 export const getDashboardResource = async <T>(
     resource: string,
-    params?: object
+    params?: object,
+    signal?: AbortSignal
 ): Promise<ApiResponse<T[]>> => {
-    const {data} = await api.get<ApiResponse<T[]>>(`/${resource}/dashboard`, {params});
+    const {data} = await api.get<ApiResponse<T[]>>(`/${resource}/dashboard`, {
+        params,
+        signal,
+    });
     return data;
 };
 
 export const getActiveResource = async <T>(
     resource: string,
-    params?: object
+    params?: object,
+    signal?: AbortSignal
 ): Promise<ApiResponse<T[]>> => {
-    const {data} = await api.get<ApiResponse<T[]>>(`/${resource}`, {params});
+    const {data} = await api.get<ApiResponse<T[]>>(`/${resource}`, {
+        params,
+        signal,
+    });
     return data;
 };
 
 export const getResourceById = async <T>(
     resource: string,
     idOrSlug: string,
-    params?: object
+    params?: object,
+    signal?: AbortSignal
 ): Promise<ApiResponse<T>> => {
-    const {data} = await api.get<ApiResponse<T>>(`/${resource}/${idOrSlug}`, {params});
+    const {data} = await api.get<ApiResponse<T>>(`/${resource}/${idOrSlug}`, {
+        params,
+        signal,
+    });
     return data;
 };
 
