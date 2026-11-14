@@ -2,8 +2,8 @@ import { cookies } from "next/headers";
 import { MapPin } from "lucide-react";
 import { getLocale } from "@/lib/locale";
 import { getActiveCategories } from "@/services/portfolio-hero.server";
+import { SectionMarquee } from "@/components/shared/SectionMarquee";
 import { aboutCopy } from "./about.copy";
-import { AboutMarquee } from "./AboutMarquee";
 import { AboutNarrativeMotion } from "./AboutNarrativeMotion";
 import { AboutTextHighlight } from "./AboutTextHighlight";
 
@@ -19,7 +19,7 @@ export async function AboutSection() {
             aria-labelledby="about-title"
             className="relative w-full overflow-hidden border-y border-border/70 bg-background/65"
         >
-            <AboutMarquee />
+            <SectionMarquee label="ABOUT ME" />
 
             <div dir={isRtl ? "rtl" : "ltr"} className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
                 <AboutNarrativeMotion>
