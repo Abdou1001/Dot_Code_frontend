@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/navbar";
 import { AboutSection } from "@/components/sections/about";
 import { HeroSection } from "@/components/sections/hero";
+import { ServicesSection } from "@/components/sections/services";
 import { TestimonialsSection } from "@/components/sections/testimonials";
 
 export default function HomePage() {
@@ -18,15 +19,10 @@ export default function HomePage() {
 
                 <TestimonialsSection />
 
+                <ServicesSection />
+
                 {/* Semantic section placeholders retained for Navbar scroll targets. */}
                 <div className="mx-auto w-full max-w-7xl space-y-32 px-6 py-12">
-                <section
-                    id="services"
-                    aria-label="Services section"
-                    className="min-h-[40vh] rounded-3xl border border-dashed border-neutral-300 dark:border-neutral-800 flex items-center justify-center p-8 text-neutral-400 dark:text-neutral-600 text-sm font-mono">
-                    #services
-                </section>
-
                 <section
                     id="projects"
                     aria-label="Projects section"
