@@ -30,10 +30,6 @@ export default function NotFound() {
                     <Button asChild>
                         <Link href="/">العودة للرئيسية</Link>
                     </Button>
-
-                    <Button asChild variant="outline">
-                        <Link href="/dashboard">لوحة التحكم</Link>
-                    </Button>
                 </div>
             </div>
         </main>

@@ -84,19 +84,19 @@
 }
 
 .dark {
-  --background: #060b26;
+  --background: #000;
   --foreground: #f8fafc;
-  --card: #0b1437;
+  --card: #000000;
   --card-foreground: #f8fafc;
-  --popover: #0b1437;
+  --popover: #080808;
   --popover-foreground: #f8fafc;
   --primary: #0075ff;
   --primary-foreground: #ffffff;
-  --secondary: #111c44;
+  --secondary: #0a0a0a;
   --secondary-foreground: #f8fafc;
-  --muted: #0e1b4d;
+  --muted: #0a0a0a;
   --muted-foreground: #94a3b8;
-  --accent: #152563;
+  --accent: #121212;
   --accent-foreground: #ffffff;
   --destructive: #ee5d50;
   --border: rgba(255, 255, 255, 0.08);
@@ -107,11 +107,11 @@
   --chart-3: #01b574;
   --chart-4: #ffb547;
   --chart-5: #2cd9ff;
-  --sidebar: #060b26;
+  --sidebar: #000000;
   --sidebar-foreground: #f8fafc;
   --sidebar-primary: #0075ff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #0f1c4d;
+  --sidebar-accent: #121212;
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.07);
   --sidebar-ring: #0075ff;
@@ -129,6 +129,175 @@
   backdrop-filter: blur(20px);
   border: 1px solid rgba(0, 117, 255, 0.3);
   box-shadow: 0 0 25px -5px rgba(0, 117, 255, 0.2), 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes hero-name-gradient {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes about-marquee-ltr {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes testimonials-ticker-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -25%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-marquee-track--ltr,
+  .about-marquee-track--rtl {
+    animation: none;
+  }
+
+  .testimonials-ticker-track {
+    animation: none;
+  }
+
+  .testimonials-ticker-set:not(:first-child) {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Navbar navigation components */
+  .nav-pill {
+    @apply flex items-center gap-1 p-1.5 rounded-full bg-neutral-100/90 dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-white/10 backdrop-blur-md shadow-xs;
+  }
+
+  .nav-link {
+    @apply relative flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs lg:text-sm font-medium transition-colors duration-150 text-neutral-600 dark:text-white hover:text-[#2563EB] hover:bg-gray-200 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] select-none;
+  }
+
+  .floating-tech-particle {
+    @apply absolute top-0 text-blue-700/35 dark:text-blue-300/45;
+  }
+
+  .hero-layout {
+    @apply relative mx-auto flex min-h-[calc(100svh-4rem)] w-full flex-col justify-between gap-10 px-6 py-12 md:h-[85vh] md:min-h-0 md:flex-row md:items-center md:gap-16 md:px-0 md:py-0;
+  }
+
+  .hero-introduction-column {
+    @apply relative z-10 w-full xl:max-w-[56%];
+  }
+
+  .hero-side-column {
+    @apply flex w-full flex-col items-center gap-10 md:w-auto md:gap-16;
+  }
+
+  .hero-actions {
+    @apply mt-9 flex flex-col items-start gap-5;
+  }
+
+  .hero-action-stack {
+    @apply flex flex-col items-start gap-4;
+  }
+
+  .hero-cv-button {
+    @apply h-14 rounded-full bg-primary px-10 text-base text-white hover:bg-[#1d4ed8] focus-visible:ring-[#2563EB];
+  }
+
+  .hero-social-links {
+    @apply flex items-center gap-3;
+  }
+
+  .hero-social-link {
+    @apply grid size-11 place-items-center rounded-full border border-neutral-300/80 text-neutral-700 transition-colors hover:border-[#2563EB] hover:text-[#2563EB] dark:border-white/20 dark:text-neutral-200 dark:hover:border-[#2563EB] dark:hover:text-blue-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB];
+  }
+
+  .hero-contact-area {
+    @apply hidden size-52 place-items-center xl:grid;
+  }
+
+  .hero-contact-button {
+    @apply flex size-36 flex-col items-center justify-center rounded-full border border-neutral-300/70 bg-white/90 text-center text-sm font-semibold text-neutral-900 shadow-sm transition-colors hover:border-[#2563EB] dark:border-white/20 dark:bg-neutral-950/80 dark:text-white dark:hover:border-[#2563EB] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB];
+  }
+
+  .hero-statistics {
+    @apply relative z-10 flex h-auto w-full items-end justify-between bg-background/20 backdrop-blur-sm md:mb-28 md:h-full md:w-auto md:justify-start;
+  }
+
+  .hero-stat-item {
+    @apply min-w-0 flex-1 px-3 py-7 text-center first:border-s-0 sm:px-5 md:flex-none md:text-start lg:px-8 lg:py-9;
+  }
+
+  .hero-stat-value {
+    @apply flex items-baseline text-xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-3xl;
+  }
+
+  .hero-stat-label {
+    @apply mt-2 block text-xs leading-5 text-muted-foreground sm:text-sm;
+  }
+
+  .about-marquee {
+    @apply overflow-hidden border-y border-border/60 py-5 sm:py-7;
+  }
+
+  .about-marquee-track {
+    @apply flex w-max whitespace-nowrap text-foreground uppercase motion-reduce:transform-none;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: clamp(3.75rem, 7.5vw, 7.25rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    will-change: transform;
+  }
+
+  .about-marquee-track--ltr {
+    animation: about-marquee-ltr 60s linear infinite;
+  }
+
+  .about-marquee-sequence {
+    @apply flex shrink-0 items-center;
+  }
+
+  .about-marquee-item {
+    @apply inline-flex items-center gap-6 px-3 sm:gap-10 sm:px-5;
+  }
+
+  .about-marquee-outline {
+    @apply text-foreground/45;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.5px currentColor;
+  }
+
+  .about-marquee-solid {
+    @apply text-foreground;
+  }
+
+  .about-marquee-dot {
+    @apply inline-block size-2 shrink-0 rounded-full bg-foreground sm:size-2.5;
+  }
+
+  .testimonials-ticker-viewport {
+    @apply relative h-[30rem] overflow-hidden sm:h-[34rem] lg:h-[38rem];
+    mask-image: linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
+  }
+
+  .testimonials-ticker-track {
+    @apply flex flex-col;
+    animation: testimonials-ticker-up 30s linear infinite;
+    will-change: transform;
+  }
+
+  .testimonials-ticker-viewport:hover .testimonials-ticker-track {
+    animation-play-state: paused;
+  }
+
+  .testimonials-ticker-set {
+    @apply flex flex-col gap-5 pb-5;
+  }
 }
 
 @layer base {
