@@ -1,4 +1,4 @@
-import type { ApiResponse, Category, Pagination, Project, Service, ServiceTranslation, Technology, Testimonial } from "@/types/data";
+import type { ApiResponse, Category, Pagination, Project, ProjectImage, ProjectTranslation, Service, ServiceTranslation, Technology, Testimonial } from "@/types/data";
 
 type PublicListResponse<T> = ApiResponse<T[]> & { pagination?: Pagination };
 
@@ -10,13 +10,15 @@ interface HeroPortfolioData {
 
 const API_ORIGIN = process.env.BACKEND_URL;
 
-async function getPublicList<T>(resource: string, limit = 12): Promise<PublicListResponse<T> | null> {
+async function getPublicList<T>(resource: string, limit = 12, query?: Record<string, string>, fresh = false): Promise<PublicListResponse<T> | null> {
     if (!API_ORIGIN) return null;
 
     try {
-        const response = await fetch(`${API_ORIGIN}/api/${resource}?page=1&limit=${limit}`, {
-            next: { revalidate: 600 },
-        });
+        const params = new URLSearchParams({ page: "1", limit: String(limit), ...query });
+        const response = await fetch(
+            `${API_ORIGIN}/api/${resource}?${params}`,
+            fresh ? { cache: "no-store" } : { next: { revalidate: 600 } }
+        );
 
         if (!response.ok) return null;
         return response.json() as Promise<PublicListResponse<T>>;
@@ -25,13 +27,14 @@ async function getPublicList<T>(resource: string, limit = 12): Promise<PublicLis
     }
 }
 
-async function getPublicResource<T>(resource: string): Promise<ApiResponse<T[]> | null> {
+async function getPublicResource<T>(resource: string, fresh = false): Promise<ApiResponse<T[]> | null> {
     if (!API_ORIGIN) return null;
 
     try {
-        const response = await fetch(`${API_ORIGIN}/api/${resource}`, {
-            next: { revalidate: 600 },
-        });
+        const response = await fetch(
+            `${API_ORIGIN}/api/${resource}`,
+            fresh ? { cache: "no-store" } : { next: { revalidate: 600 } }
+        );
 
         if (!response.ok) return null;
         return response.json() as Promise<ApiResponse<T[]>>;
@@ -87,6 +90,29 @@ export async function getActiveServices(limit = 100): Promise<Service[]> {
             return {
                 ...service,
                 translations: translations?.results ?? [],
+            };
+        })
+    );
+}
+
+/** Published projects and their public media/technology relationships for the portfolio. */
+export async function getPublishedProjects(limit = 20): Promise<Project[]> {
+    const projects = await getPublicList<Project>("projects", limit, undefined, true);
+    const publishedProjects = projects?.results ?? [];
+
+    return Promise.all(
+        publishedProjects.map(async (project) => {
+            const [translations, images, technologies] = await Promise.all([
+                getPublicResource<ProjectTranslation>(`projects/${project.id}/translations`, true),
+                getPublicResource<ProjectImage>(`projects/${project.id}/images`, true),
+                getPublicResource<Technology>(`projects/${project.id}/technologies`, true),
+            ]);
+
+            return {
+                ...project,
+                translations: translations?.results ?? [],
+                images: images?.results ?? [],
+                technologies: technologies?.results ?? [],
             };
         })
     );
