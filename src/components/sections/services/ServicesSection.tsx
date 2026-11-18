@@ -15,7 +15,7 @@ export async function ServicesSection() {
 
     return (
         <section id="services" aria-labelledby="services-title" className="overflow-hidden border-y border-border/70 bg-background">
-            <SectionMarquee label={locale === "ar" ? "خدماتنا" : "OUR SERVICES"} />
+            <SectionMarquee label="OUR SERVICES" />
 
             <div dir={isRtl ? "rtl" : "ltr"} className="container mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
                 <header className="mx-auto max-w-3xl text-center">
