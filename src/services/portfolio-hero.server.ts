@@ -1,4 +1,19 @@
-import type { ApiResponse, Category, Pagination, Project, ProjectImage, ProjectTranslation, Service, ServiceTranslation, Technology, Testimonial } from "@/types/data";
+import type {
+    ApiResponse,
+    Category,
+    Pagination,
+    Project,
+    ProjectImage,
+    ProjectTranslation,
+    Service,
+    ServiceTranslation,
+    Technology,
+    Testimonial,
+} from "@/types/data";
+
+/* -------------------------------------------------------------------------- */
+/*                                Types & Config                              */
+/* -------------------------------------------------------------------------- */
 
 type PublicListResponse<T> = ApiResponse<T[]> & { pagination?: Pagination };
 
@@ -10,47 +25,102 @@ interface HeroPortfolioData {
 
 const API_ORIGIN = process.env.BACKEND_URL;
 
-async function getPublicList<T>(resource: string, limit = 12, query?: Record<string, string>, fresh = false): Promise<PublicListResponse<T> | null> {
+/* -------------------------------------------------------------------------- */
+/*                            Generic Fetch Helpers                           */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Low-level fetch wrapper for public API endpoints with error boundaries and caching.
+ */
+async function fetchPublicApi<T>(
+    endpoint: string,
+    options?: {
+        params?: Record<string, string>;
+        fresh?: boolean;
+        revalidate?: number;
+    }
+): Promise<T | null> {
     if (!API_ORIGIN) return null;
 
     try {
-        const params = new URLSearchParams({ page: "1", limit: String(limit), ...query });
-        const response = await fetch(
-            `${API_ORIGIN}/api/${resource}?${params}`,
-            fresh ? { cache: "no-store" } : { next: { revalidate: 600 } }
-        );
+        const url = new URL(`${API_ORIGIN}/api/${endpoint}`);
+        if (options?.params) {
+            Object.entries(options.params).forEach(([key, value]) => {
+                if (value !== undefined && value !== null) {
+                    url.searchParams.set(key, value);
+                }
+            });
+        }
 
+        const fetchInit: RequestInit = options?.fresh
+            ? { cache: "no-store" }
+            : { next: { revalidate: options?.revalidate ?? 600 } };
+
+        const response = await fetch(url.toString(), fetchInit);
         if (!response.ok) return null;
-        return response.json() as Promise<PublicListResponse<T>>;
+
+        return (await response.json()) as T;
     } catch {
         return null;
     }
 }
 
+/**
+ * Fetch a paginated public collection.
+ */
+async function getPublicList<T>(
+    resource: string,
+    limit = 12,
+    query?: Record<string, string>,
+    fresh = false
+): Promise<PublicListResponse<T> | null> {
+    return fetchPublicApi<PublicListResponse<T>>(resource, {
+        params: { page: "1", limit: String(limit), ...query },
+        fresh,
+    });
+}
+
+/**
+ * Fetch a flat array resource (e.g. nested sub-resources).
+ */
 async function getPublicResource<T>(resource: string, fresh = false): Promise<ApiResponse<T[]> | null> {
-    if (!API_ORIGIN) return null;
-
-    try {
-        const response = await fetch(
-            `${API_ORIGIN}/api/${resource}`,
-            fresh ? { cache: "no-store" } : { next: { revalidate: 600 } }
-        );
-
-        if (!response.ok) return null;
-        return response.json() as Promise<ApiResponse<T[]>>;
-    } catch {
-        return null;
-    }
+    return fetchPublicApi<ApiResponse<T[]>>(resource, { fresh });
 }
 
+/**
+ * Helper to safely extract total count from pagination metadata.
+ */
 function getCount<T>(response: PublicListResponse<T> | null): number | null {
     return response?.pagination?.totalResults ?? null;
 }
 
 /**
- * Reads only public API resources. The API itself applies visibility rules:
- * Public project results are published by the Backend. Services and testimonials
- * likewise apply their public visibility rules at the API boundary.
+ * Concurrently populates a project with its public nested sub-resources
+ * (translations, images, technologies, and categories).
+ */
+async function enrichProjectRelations(project: Project, fresh = true): Promise<Project> {
+    const [translations, images, technologies, categories] = await Promise.all([
+        getPublicResource<ProjectTranslation>(`projects/${project.id}/translations`, fresh),
+        getPublicResource<ProjectImage>(`projects/${project.id}/images`, fresh),
+        getPublicResource<Technology>(`projects/${project.id}/technologies`, fresh),
+        getPublicResource<Category>(`projects/${project.id}/categories`, fresh),
+    ]);
+
+    return {
+        ...project,
+        translations: translations?.results ?? [],
+        images: images?.results ?? [],
+        technologies: technologies?.results ?? [],
+        categories: categories?.results ?? [],
+    };
+}
+
+/* -------------------------------------------------------------------------- */
+/*                         1. Hero & Metrics Services                         */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Reads public summary counts for the Hero section statistics counters.
  */
 export async function getHeroPortfolioData(): Promise<HeroPortfolioData> {
     const [projects, services, testimonials] = await Promise.all([
@@ -66,27 +136,40 @@ export async function getHeroPortfolioData(): Promise<HeroPortfolioData> {
     };
 }
 
-/** Decorative data only: an empty result deliberately renders no background. */
+/**
+ * Decorative floating technologies for ambient particle backgrounds.
+ */
 export async function getFloatingTechnologies(): Promise<Technology[]> {
-    const technologies = await getPublicList<Technology>("technologies");
-    return technologies?.results ?? [];
+    const response = await getPublicList<Technology>("technologies");
+    return response?.results ?? [];
 }
 
-/** The public endpoint returns only active categories, ordered by the Backend. */
+/* -------------------------------------------------------------------------- */
+/*                            2. Categories Services                          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Reads active categories for filter badges and section navigation.
+ */
 export async function getActiveCategories(): Promise<Category[]> {
-    const categories = await getPublicList<Category>("categories");
-    return categories?.results ?? [];
+    const response = await getPublicList<Category>("categories");
+    return response?.results ?? [];
 }
 
-/** Public services are loaded with their public translations for server-rendered sections. */
+/* -------------------------------------------------------------------------- */
+/*                             3. Services Domain                             */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Reads public services enriched with localized translations.
+ */
 export async function getActiveServices(limit = 100): Promise<Service[]> {
-    const services = await getPublicList<Service>("services", limit);
-    const activeServices = services?.results ?? [];
+    const response = await getPublicList<Service>("services", limit);
+    const activeServices = response?.results ?? [];
 
     return Promise.all(
         activeServices.map(async (service) => {
             const translations = await getPublicResource<ServiceTranslation>(`services/${service.id}/translations`);
-
             return {
                 ...service,
                 translations: translations?.results ?? [],
@@ -95,31 +178,43 @@ export async function getActiveServices(limit = 100): Promise<Service[]> {
     );
 }
 
-/** Published projects and their public media/technology relationships for the portfolio. */
+/* -------------------------------------------------------------------------- */
+/*                             4. Projects Domain                             */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Reads published projects with their complete relations for the portfolio scroller.
+ */
 export async function getPublishedProjects(limit = 20): Promise<Project[]> {
-    const projects = await getPublicList<Project>("projects", limit, undefined, true);
-    const publishedProjects = projects?.results ?? [];
+    const response = await getPublicList<Project>("projects", limit, undefined, true);
+    const publishedProjects = response?.results ?? [];
 
-    return Promise.all(
-        publishedProjects.map(async (project) => {
-            const [translations, images, technologies] = await Promise.all([
-                getPublicResource<ProjectTranslation>(`projects/${project.id}/translations`, true),
-                getPublicResource<ProjectImage>(`projects/${project.id}/images`, true),
-                getPublicResource<Technology>(`projects/${project.id}/technologies`, true),
-            ]);
-
-            return {
-                ...project,
-                translations: translations?.results ?? [],
-                images: images?.results ?? [],
-                technologies: technologies?.results ?? [],
-            };
-        })
-    );
+    return Promise.all(publishedProjects.map((project) => enrichProjectRelations(project, true)));
 }
 
-/** The public endpoint returns only testimonials approved for public display. */
+/**
+ * Reads a single published project by slug with full relation population for the detail page.
+ */
+export async function getPublicProjectBySlug(slug: string, locale?: string): Promise<Project | null> {
+    const response = await fetchPublicApi<ApiResponse<Project>>(`projects/${slug}`, {
+        params: locale ? { locale } : undefined,
+        fresh: true,
+    });
+
+    const project = response?.results;
+    if (!project?.id) return null;
+
+    return enrichProjectRelations(project, true);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                           5. Testimonials Domain                           */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Reads published testimonials approved for public client display.
+ */
 export async function getPublishedTestimonials(limit = 100): Promise<Testimonial[]> {
-    const testimonials = await getPublicList<Testimonial>("testimonials", limit);
-    return testimonials?.results ?? [];
+    const response = await getPublicList<Testimonial>("testimonials", limit);
+    return response?.results ?? [];
 }
