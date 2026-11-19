@@ -4,14 +4,21 @@ import type { Locale } from "@/types/enums";
 export interface PortfolioProject extends Project {
     title: string;
     description?: string;
+    cleanDescription?: string;
     image?: ProjectImage;
+    images: ProjectImage[];
 }
 
-function getPrimaryImage(images: ProjectImage[] | undefined) {
+export function sortProjectImages(images: ProjectImage[] | undefined): ProjectImage[] {
     return [...(images ?? [])].sort((first, second) => {
         if (first.is_featured !== second.is_featured) return Number(second.is_featured) - Number(first.is_featured);
         return first.sort_order - second.sort_order;
-    })[0];
+    });
+}
+
+export function stripHtmlTags(text?: string): string {
+    if (!text) return "";
+    return text.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function getTranslation(project: Project, locale: Locale): ProjectTranslation | undefined {
@@ -25,12 +32,15 @@ function getTranslation(project: Project, locale: Locale): ProjectTranslation | 
 export function createPortfolioProjects(projects: Project[], locale: Locale): PortfolioProject[] {
     const localizedProjects = projects.map((project) => {
         const translation = getTranslation(project, locale);
+        const sortedImages = sortProjectImages(project.images);
 
         return {
             ...project,
             title: translation?.title ?? project.slug,
             description: translation?.description,
-            image: getPrimaryImage(project.images),
+            cleanDescription: stripHtmlTags(translation?.description),
+            image: sortedImages[0],
+            images: sortedImages,
         };
     });
 

@@ -16,9 +16,9 @@ export async function ProjectsSection() {
     const isRtl = locale === "ar";
 
     return (
-        <section id="projects" aria-labelledby="projects-title" className="overflow-hidden border-y border-border/70 bg-background py-16 sm:py-24 lg:py-28">
+        <section id="projects" aria-labelledby="projects-title" className="overflow-hidden border-y border-border/70 bg-background pt-16 sm:pt-20 pb-12 sm:pb-16">
             <div dir={isRtl ? "rtl" : "ltr"} className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <header className="mx-auto mb-12 max-w-3xl text-center lg:mb-16">
+                <header className="mx-auto mb-8 sm:mb-10 max-w-3xl text-center">
                     <p className="text-sm font-semibold text-primary">{content.eyebrow}</p>
                     <h2 id="projects-title" className="mt-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
                         {content.heading}

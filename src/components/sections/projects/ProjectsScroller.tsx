@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -47,7 +48,8 @@ export function ProjectsScroller({ children, count, currentLabel, scrollHint, is
                         onUpdate: (trigger) => {
                             const projectNumber = Math.min(count, Math.floor(trigger.progress * count) + 1);
                             currentProject.textContent = String(projectNumber).padStart(2, "0");
-                            gsap.set(progress, { scaleX: trigger.progress });
+                            const fillRatio = (1 / count) + trigger.progress * (1 - (1 / count));
+                            gsap.set(progress, { scaleX: Math.min(1, Math.max(1 / count, fillRatio)) });
                         },
                     },
                 });
@@ -66,16 +68,21 @@ export function ProjectsScroller({ children, count, currentLabel, scrollHint, is
                 {children}
             </div>
 
-            <div className="projects-progress" aria-label={`${currentLabel} 1 ${count}`}>
-                <span className="font-mono text-sm font-semibold text-foreground">
-                    <span ref={currentProjectRef}>01</span>
-                    <span className="mx-2 text-muted-foreground">/</span>
-                    <span className="text-muted-foreground">{String(count).padStart(2, "0")}</span>
+            <div className="projects-progress z-20" aria-label={`${currentLabel} 1 ${count}`}>
+                <span className="font-mono text-sm sm:text-base font-bold text-foreground flex items-center gap-1.5 select-none shrink-0">
+                    <span ref={currentProjectRef} className="text-white font-extrabold text-base sm:text-lg">01</span>
+                    <span className="text-neutral-500 font-light">/</span>
+                    <span className="text-neutral-400 font-semibold">{String(count).padStart(2, "0")}</span>
                 </span>
                 <span className="projects-progress-line" aria-hidden="true">
                     <span ref={progressRef} style={{ transform: `scaleX(${1 / count})` }} />
                 </span>
-                <span className="hidden text-sm text-muted-foreground sm:block">{scrollHint}</span>
+                <span className="hidden text-xs sm:text-sm font-semibold tracking-wider text-neutral-400 sm:inline-flex items-center gap-2 select-none shrink-0">
+                    <span>{scrollHint}</span>
+                    <span className={cn("inline-block text-primary text-base font-bold transition-transform", isRtl ? "rotate-180" : "")}>
+                        →
+                    </span>
+                </span>
             </div>
         </div>
     );

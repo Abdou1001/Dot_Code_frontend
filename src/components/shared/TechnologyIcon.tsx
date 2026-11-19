@@ -70,6 +70,7 @@ export interface TechnologyIconProps extends React.SVGAttributes<SVGElement> {
     name?: string;
     size?: number | string;
     useBrandColor?: boolean;
+    color?: string;
     className?: string;
     fallbackIcon?: React.ReactNode;
 }
@@ -79,6 +80,7 @@ export const TechnologyIcon = React.memo(function TechnologyIcon({
     name,
     size = 20,
     useBrandColor = true,
+    color,
     className,
     fallbackIcon,
     ...props
@@ -100,7 +102,7 @@ export const TechnologyIcon = React.memo(function TechnologyIcon({
             <img
                 src={icon}
                 alt={name || "technology icon"}
-                className={cn("object-contain shrink-0 rounded", className)}
+                className={cn("object-contain shrink-0 rounded", !useBrandColor && "brightness-0 invert", className)}
                 style={{width: dimension, height: dimension}}
             />
         );
@@ -108,7 +110,7 @@ export const TechnologyIcon = React.memo(function TechnologyIcon({
 
     // 2. Simple Icon Resolved
     if (resolvedIcon) {
-        const fillColor = useBrandColor ? getSafeBrandColor(resolvedIcon.hex) : "currentColor";
+        const fillColor = color || (useBrandColor ? getSafeBrandColor(resolvedIcon.hex) : (props.fill || "currentColor"));
 
         return (
             <svg
@@ -132,7 +134,7 @@ export const TechnologyIcon = React.memo(function TechnologyIcon({
 
     return (
         <Code2
-            className={cn("text-slate-400 shrink-0 inline-block", className)}
+            className={cn("shrink-0 inline-block", !useBrandColor ? "text-white" : "text-slate-400", className)}
             style={{width: dimension, height: dimension}}
             aria-hidden="true"
         />
